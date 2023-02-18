@@ -14,9 +14,24 @@ namespace TripLog.ViewModels
 
         protected BaseViewModel() { }
 
+
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        public virtual void Init() { }
+    }
+
+    public class BaseViewModel<TParameter> : BaseViewModel
+    {
+        public BaseViewModel() { }
+
+        public override void Init()
+        {
+            Init(default(TParameter));
+        }
+
+        public virtual void Init(TParameter parameter) { }
     }
 }
