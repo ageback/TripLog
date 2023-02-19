@@ -6,13 +6,17 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using TripLog.Services;
 
 namespace TripLog.ViewModels
 {
     public class BaseValidationViewModel : BaseViewModel, INotifyDataErrorInfo
     {
         readonly IDictionary<string, List<string>> _errors = new Dictionary<string, List<string>>();
-        public BaseValidationViewModel() { }
+
+        public BaseValidationViewModel(INavService navService) : base(navService)
+        {
+        }
 
         public bool HasErrors => _errors?.Any(x => x.Value?.Any() == true) == true;
 

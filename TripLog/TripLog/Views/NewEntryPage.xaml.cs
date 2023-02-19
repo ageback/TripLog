@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TripLog.Services;
 using TripLog.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -14,15 +15,17 @@ namespace TripLog.Views
     public partial class NewEntryPage : ContentPage
     {
         NewEntryViewModel ViewModel => BindingContext as NewEntryViewModel;
+
         public NewEntryPage()
         {
             InitializeComponent();
 
             BindingContextChanged += Page_BindingContextChanged;
-            BindingContext = new NewEntryViewModel();
+            BindingContext = new NewEntryViewModel(DependencyService.Get<INavService>());
         }
 
-        void Page_BindingContextChanged(object sender, EventArgs e) => ViewModel.ErrorsChanged += ViewModel_ErrorsChanged;
+        void Page_BindingContextChanged(object sender, EventArgs e) =>
+            ViewModel.ErrorsChanged += ViewModel_ErrorsChanged;
 
         void ViewModel_ErrorsChanged(object sender, DataErrorsChangedEventArgs e)
         {

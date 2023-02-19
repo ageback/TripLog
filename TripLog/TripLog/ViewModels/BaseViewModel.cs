@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+using TripLog.Services;
 
 namespace TripLog.ViewModels
 {
@@ -12,7 +8,12 @@ namespace TripLog.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected BaseViewModel() { }
+        protected INavService NavService { get; private set; }
+
+        protected BaseViewModel(INavService navService)
+        {
+            NavService = navService;
+        }
 
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -20,18 +21,24 @@ namespace TripLog.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public virtual void Init() { }
+        public virtual void Init()
+        {
+        }
     }
 
     public class BaseViewModel<TParameter> : BaseViewModel
     {
-        public BaseViewModel() { }
+        public BaseViewModel(INavService navService) : base(navService)
+        {
+        }
 
         public override void Init()
         {
             Init(default(TParameter));
         }
 
-        public virtual void Init(TParameter parameter) { }
+        public virtual void Init(TParameter parameter)
+        {
+        }
     }
 }
