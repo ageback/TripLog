@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using TripLog.Models;
 using TripLog.Services;
 using TripLog.ViewModels;
@@ -17,11 +13,15 @@ namespace TripLog.Views
     {
         DetailViewModel ViewModel => BindingContext as DetailViewModel;
 
-        public DetailPage(TripLogEntry entry)
+        public DetailPage()
         {
             InitializeComponent();
-
             BindingContext = new DetailViewModel(DependencyService.Get<INavService>());
+        }
+
+        void UpdateMap()
+        {
+            if (ViewModel.Entry == null) return;
 
             map.MoveToRegion(MapSpan.FromCenterAndRadius(
                 new Position(ViewModel.Entry.Latitude, ViewModel.Entry.Longitude), Distance.FromMiles(.5)));
@@ -31,6 +31,32 @@ namespace TripLog.Views
                 Label = ViewModel.Entry.Title,
                 Position = new Position(ViewModel.Entry.Latitude, ViewModel.Entry.Longitude)
             });
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            if (ViewModel != null)
+            {
+                ViewModel.PropertyChanged += OnViewModelPropertyChanged;
+            }
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            if (ViewModel != null)
+            {
+                ViewModel.PropertyChanged -= OnViewModelPropertyChanged;
+            }
+        }
+
+        void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            if (args.PropertyName == nameof(DetailViewModel.Entry))
+            {
+                UpdateMap();
+            }
         }
     }
 }

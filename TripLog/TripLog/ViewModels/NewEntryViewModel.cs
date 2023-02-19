@@ -12,6 +12,7 @@ namespace TripLog.ViewModels
     public class NewEntryViewModel : BaseValidationViewModel
     {
         string _title;
+
         public string Title
         {
             get => _title;
@@ -23,7 +24,9 @@ namespace TripLog.ViewModels
                 SaveCommand.ChangeCanExecute();
             }
         }
+
         double _latitude;
+
         public double Latitude
         {
             get => _latitude;
@@ -35,6 +38,7 @@ namespace TripLog.ViewModels
         }
 
         double _longitude;
+
         public double Longitude
         {
             get => _longitude;
@@ -44,7 +48,9 @@ namespace TripLog.ViewModels
                 OnPropertyChanged();
             }
         }
+
         DateTime _date;
+
         public DateTime Date
         {
             get => _date;
@@ -54,7 +60,9 @@ namespace TripLog.ViewModels
                 OnPropertyChanged();
             }
         }
+
         int _rating;
+
         public int Rating
         {
             get => _rating;
@@ -66,7 +74,9 @@ namespace TripLog.ViewModels
                 SaveCommand.ChangeCanExecute();
             }
         }
+
         string _notes;
+
         public string Notes
         {
             get => _notes;
@@ -78,7 +88,7 @@ namespace TripLog.ViewModels
         }
 
         Command _saveCommand;
-        public Command SaveCommand => _saveCommand ?? (_saveCommand = new Command(Save, CanSave));
+        public Command SaveCommand => _saveCommand ?? (_saveCommand = new Command(async () => await Save(), CanSave));
 
         public NewEntryViewModel(INavService navService) : base(navService)
         {
@@ -90,7 +100,7 @@ namespace TripLog.ViewModels
         {
         }
 
-        void Save()
+        async Task Save()
         {
             var newItem = new TripLogEntry
             {
@@ -101,6 +111,8 @@ namespace TripLog.ViewModels
                 Rating = Rating,
                 Notes = Notes
             };
+// TODO: Persist Entry in a later chapter.
+            await NavService.GoBack();
         }
 
         bool CanSave() => !string.IsNullOrWhiteSpace(Title) && !HasErrors;

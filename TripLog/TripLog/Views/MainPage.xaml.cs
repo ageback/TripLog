@@ -14,27 +14,18 @@ namespace TripLog.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MainPage : ContentPage
     {
+        MainViewModel ViewModel => BindingContext as MainViewModel;
+
         public MainPage()
         {
             InitializeComponent();
             BindingContext = new MainViewModel(DependencyService.Get<INavService>());
         }
 
-        void New_Clicked(object sender, EventArgs e)
+        protected override void OnAppearing()
         {
-            Navigation.PushAsync(new NewEntryPage());
-        }
-
-
-        async void Trips_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            var trip = (TripLogEntry)e.CurrentSelection.FirstOrDefault();
-            if (trip != null)
-            {
-                await Navigation.PushAsync(new DetailPage(trip));
-            }
-
-            trips.SelectedItem = null;
+            base.OnAppearing();
+            ViewModel?.Init();
         }
     }
 }
