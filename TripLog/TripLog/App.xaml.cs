@@ -30,6 +30,7 @@ namespace TripLog
             };
             var navService = Kernel.Get<INavService>() as XamarinFormsNavService;
             navService.XamarinFormsNav = mainPage.Navigation;
+            MainPage = mainPage;
         }
 
         protected override void OnStart()
