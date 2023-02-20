@@ -9,7 +9,6 @@ using TripLog.Services;
 using TripLog.ViewModels;
 using Xamarin.Forms;
 
-[assembly: Dependency(typeof(XamarinFormsNavService))]
 
 namespace TripLog.Services
 {
@@ -73,7 +72,7 @@ namespace TripLog.Services
             XamarinFormsNav.RemovePage(lastView);
         }
 
-        async Task NavigateToView(Type viewModelType)
+        private async Task NavigateToView(Type viewModelType)
         {
             if (!_map.TryGetValue(viewModelType, out Type viewType))
             {
@@ -83,6 +82,8 @@ namespace TripLog.Services
             var constructor = viewType.GetTypeInfo().DeclaredConstructors
                 .FirstOrDefault(dc => !dc.GetParameters().Any());
             var view = constructor?.Invoke(null) as Page;
+            var vm = ((App)Application.Current).Kernel.GetService(viewModelType);
+            view.BindingContext = vm;
             await XamarinFormsNav.PushAsync(view, true);
         }
 
