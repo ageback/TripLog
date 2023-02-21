@@ -54,6 +54,9 @@
     <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="akavache">
+      <Version>9.1.7</Version>
+    </PackageReference>
     <PackageReference Include="Json.Net">
       <Version>1.0.33</Version>
     </PackageReference>
