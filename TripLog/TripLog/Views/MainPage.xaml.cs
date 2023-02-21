@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TripLog.Models;
-using TripLog.Services;
-using TripLog.ViewModels;
+﻿using TripLog.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 

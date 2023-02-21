@@ -3,14 +3,20 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:TripLog.Controls;assembly=TripLog"
+             xmlns:converters="clr-namespace:TripLog.Converters;assembly=TripLog"
              Title="New Entry"
              x:Class="TripLog.Views.NewEntryPage">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:ReverseBooleanConverter x:Key="ReverseBooleanConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Save" Command="{Binding SaveCommand}" />
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <Grid>
-            <TableView Intent="Form">
+            <TableView Intent="Form" IsVisible="{Binding IsBusy, Converter={StaticResource ReverseBooleanConverter}}">
                 <TableView.Root>
                     <TableSection>
                         <EntryCell x:Name="title" Label="Title" Text="{Binding Title}" />
@@ -22,6 +28,11 @@
                     </TableSection>
                 </TableView.Root>
             </TableView>
+
+            <StackLayout Orientation="Vertical" VerticalOptions="Center" HorizontalOptions="Center" IsVisible="{Binding IsBusy}">
+                <ActivityIndicator IsRunning="True"/>
+                <Label Text="Saving new entry..." />
+            </StackLayout>
         </Grid>
     </ContentPage.Content>
 </ContentPage>
