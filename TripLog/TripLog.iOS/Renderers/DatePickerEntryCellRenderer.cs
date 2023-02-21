@@ -1,9 +1,12 @@
 ﻿using System;
 using Foundation;
 using TripLog.Controls;
+using TripLog.iOS.Renderers;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
+
+[assembly: ExportRenderer(typeof(DatePickerEntryCell), typeof(DatePickerEntryCellRenderer))]
 
 namespace TripLog.iOS.Renderers
 {
