@@ -12,6 +12,7 @@ namespace TripLog.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
+        private readonly ITripLogDataService _tripLogService;
         private Command _refreshCommand;
         public Command RefreshCommand => _refreshCommand ?? (_refreshCommand = new Command(LoadEntries));
         ObservableCollection<TripLogEntry> _logEntries;
@@ -31,8 +32,9 @@ namespace TripLog.ViewModels
 
         public Command NewCommand => new Command(async () => await NavService.NavigateTo<NewEntryViewModel>());
 
-        public MainViewModel(INavService navService) : base(navService)
+        public MainViewModel(INavService navService, ITripLogDataService tripLogService) : base(navService)
         {
+            _tripLogService = tripLogService;
             LogEntries = new ObservableCollection<TripLogEntry>();
         }
 
@@ -41,45 +43,19 @@ namespace TripLog.ViewModels
             LoadEntries();
         }
 
-        void LoadEntries()
+        async void LoadEntries()
         {
             if (IsBusy) return;
             IsBusy = true;
-
-            LogEntries.Clear();
-            // TODO: remove this in chapter 6
-            Task.Delay(3000).ContinueWith(_ => Device.BeginInvokeOnMainThread(() =>
+            try
             {
-                LogEntries.Add(new TripLogEntry
-                {
-                    Title = "Washington Monument",
-                    Notes = "Amazing!",
-                    Rating = 3,
-                    Date = new DateTime(2019, 2, 5),
-                    Latitude = 38.8895,
-                    Longitude = -77.0352
-                });
-                LogEntries.Add(new TripLogEntry
-                {
-                    Title = "Statue of Liberty",
-                    Notes = "Inspiring!",
-                    Rating = 4,
-                    Date = new DateTime(2019, 4, 13),
-                    Latitude = 40.6892,
-                    Longitude = -74.0444
-                });
-                LogEntries.Add(new TripLogEntry
-                {
-                    Title = "Golden Gate Bridge",
-                    Notes = "Foggy, but beautiful.",
-                    Rating = 5,
-                    Date = new DateTime(2019, 4, 26),
-                    Latitude = 37.8268,
-                    Longitude = -122.4798
-                });
-
+                var entries = await _tripLogService.GetEntriesAsync();
+                LogEntries = new ObservableCollection<TripLogEntry>(entries);
+            }
+            finally
+            {
                 IsBusy = false;
-            }));
+            }
         }
     }
 }
