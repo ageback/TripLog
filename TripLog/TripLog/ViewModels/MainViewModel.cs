@@ -59,7 +59,7 @@ namespace TripLog.ViewModels
                         LogEntries = new ObservableCollection<TripLogEntry>(entries);
                         IsBusy = false;
                     });
-                throw new Exception("我让程序崩溃了");
+                //throw new Exception("我让程序崩溃了");
             }
             catch (Exception e)
             {
