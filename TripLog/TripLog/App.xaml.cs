@@ -38,8 +38,8 @@ namespace TripLog
 
         protected override void OnStart()
         {
-            AppCenter.Start("ios=\"2ff05414-308c-46c7-9f60-771667309649\";"
-                            + "android={Your Android app secret here}",
+            AppCenter.Start("ios=388f6463-9acf-4393-afef-dfb0040ad5e0;" +
+                "android=2ff05414-308c-46c7-9f60-771667309649",
                             typeof(Analytics), typeof(Crashes));
         }
 
