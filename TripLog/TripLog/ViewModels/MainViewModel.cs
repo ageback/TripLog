@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Akavache;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace TripLog.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
+        readonly IBlobCache _cache;
         private readonly ITripLogDataService _tripLogService;
         private Command _refreshCommand;
         public Command RefreshCommand => _refreshCommand ?? (_refreshCommand = new Command(LoadEntries));
@@ -32,8 +34,9 @@ namespace TripLog.ViewModels
 
         public Command NewCommand => new Command(async () => await NavService.NavigateTo<NewEntryViewModel>());
 
-        public MainViewModel(INavService navService, ITripLogDataService tripLogService) : base(navService)
+        public MainViewModel(INavService navService, ITripLogDataService tripLogService, IBlobCache cache) : base(navService)
         {
+            _cache = cache;
             _tripLogService = tripLogService;
             LogEntries = new ObservableCollection<TripLogEntry>();
         }
@@ -49,8 +52,12 @@ namespace TripLog.ViewModels
             IsBusy = true;
             try
             {
-                var entries = await _tripLogService.GetEntriesAsync();
-                LogEntries = new ObservableCollection<TripLogEntry>(entries);
+                _cache.GetAndFetchLatest("entries", async () => await _tripLogService.GetEntriesAsync())
+                    .Subscribe(entries =>
+                    {
+                        LogEntries = new ObservableCollection<TripLogEntry>(entries);
+                        IsBusy = false;
+                    });
             }
             finally
             {
