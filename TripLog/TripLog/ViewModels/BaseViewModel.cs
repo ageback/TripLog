@@ -6,9 +6,11 @@ namespace TripLog.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected INavService NavService { get; private set; }
+        protected IAnalyticsService AnalyticsService { get; private set; }
 
         private bool _isBusy;
 
@@ -22,9 +24,10 @@ namespace TripLog.ViewModels
             }
         }
 
-        protected BaseViewModel(INavService navService)
+        protected BaseViewModel(INavService navService, IAnalyticsService analyticsService)
         {
             NavService = navService;
+            AnalyticsService = analyticsService;
         }
 
 
@@ -40,7 +43,7 @@ namespace TripLog.ViewModels
 
     public class BaseViewModel<TParameter> : BaseViewModel
     {
-        public BaseViewModel(INavService navService) : base(navService)
+        public BaseViewModel(INavService navService, IAnalyticsService analyticsService) : base(navService, analyticsService)
         {
         }
 

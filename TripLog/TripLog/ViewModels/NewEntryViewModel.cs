@@ -92,7 +92,8 @@ namespace TripLog.ViewModels
         Command _saveCommand;
         public Command SaveCommand => _saveCommand ?? (_saveCommand = new Command(async () => await Save(), CanSave));
 
-        public NewEntryViewModel(INavService navService, ILocationService locService, ITripLogDataService tripLogService) : base(navService)
+        public NewEntryViewModel(INavService navService, ILocationService locService, ITripLogDataService tripLogService, IAnalyticsService analyticsService) 
+            : base(navService, analyticsService)
         {
             _locService = locService;
             _tripLogService = tripLogService;

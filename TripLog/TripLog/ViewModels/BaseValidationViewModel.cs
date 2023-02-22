@@ -14,7 +14,7 @@ namespace TripLog.ViewModels
     {
         readonly IDictionary<string, List<string>> _errors = new Dictionary<string, List<string>>();
 
-        public BaseValidationViewModel(INavService navService) : base(navService)
+        public BaseValidationViewModel(INavService navService, IAnalyticsService analyticsService) : base(navService, analyticsService)
         {
         }
 

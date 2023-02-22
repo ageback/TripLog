@@ -22,12 +22,16 @@ namespace TripLog.ViewModels
             }
         }
 
-        public DetailViewModel(INavService navService) : base(navService)
+        public DetailViewModel(INavService navService, IAnalyticsService analyticsService) : base(navService, analyticsService)
         {
         }
 
         public override void Init(TripLogEntry parameter)
         {
+            AnalyticsService.TrackEvent("Entry Detail Page", new Dictionary<string, string>
+            {
+                {"Title",parameter.Title }
+            });
             Entry = parameter;
         }
     }

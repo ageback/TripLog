@@ -34,7 +34,8 @@ namespace TripLog.ViewModels
 
         public Command NewCommand => new Command(async () => await NavService.NavigateTo<NewEntryViewModel>());
 
-        public MainViewModel(INavService navService, ITripLogDataService tripLogService, IBlobCache cache) : base(navService)
+        public MainViewModel(INavService navService, ITripLogDataService tripLogService, IBlobCache cache, IAnalyticsService analyticsService)
+             : base(navService, analyticsService)
         {
             _cache = cache;
             _tripLogService = tripLogService;
@@ -46,7 +47,7 @@ namespace TripLog.ViewModels
             LoadEntries();
         }
 
-        async void LoadEntries()
+        void LoadEntries()
         {
             if (IsBusy) return;
             IsBusy = true;
@@ -58,6 +59,13 @@ namespace TripLog.ViewModels
                         LogEntries = new ObservableCollection<TripLogEntry>(entries);
                         IsBusy = false;
                     });
+            }
+            catch (Exception e)
+            {
+                AnalyticsService.TrackError(e, new Dictionary<string, string>
+                {
+                    {"Method","MainViewModel.LoadEntries()" }
+                });
             }
             finally
             {
